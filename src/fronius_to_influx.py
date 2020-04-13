@@ -43,7 +43,12 @@ class FroniusToInflux:
         return float(internal_data.get(value, {}).get('Value', 0))
 
     def translate_response(self):
-        collection = self.data['Head']['RequestArguments']['DataCollection']
+        if 'DataCollection' in self.data['Head']['RequestArguments']:
+            collection = self.data['Head']['RequestArguments']['DataCollection']
+        elif 'DeviceClass' in self.data['Head']['RequestArguments']:
+            collection = collection = self.data['Head']['RequestArguments']['DeviceClass']
+        elif 'LoggerInfo' in self.data['Body'].keys():
+            collection = 'LoggerInfo'
         timestamp = self.data['Head']['Timestamp']
         if collection == 'CommonInverterData':
             return [
@@ -105,6 +110,34 @@ class FroniusToInflux:
                         'TOTAL_PMAX': self.get_float_or_zero('TOTAL_PMAX'),
                         'TOTAL_UACMAX': self.get_float_or_zero('TOTAL_UACMAX'),
                         'TOTAL_UDCMAX': self.get_float_or_zero('TOTAL_UDCMAX'),
+                    }
+                }
+            ]
+        elif collection == 'Meter':
+            return [
+                {
+                    'measurement': collection,
+                    'time': timestamp,
+                    'fields': {
+                        'PowerReal_P_Phase_1': self.data["Body"]["Data"]["PowerReal_P_Phase_1"],
+                        'PowerReal_P_Phase_2': self.data["Body"]["Data"]["PowerReal_P_Phase_2"],
+                        'PowerReal_P_Phase_3': self.data["Body"]["Data"]["PowerReal_P_Phase_3"],
+                        'CurrentConsumption': (int(self.data["Body"]["Data"]["PowerReal_P_Sum"] ) * -1)
+                    }
+                }
+            ]
+        elif collection == 'LoggerInfo':
+            keyname = 'LoggerInfo'
+            return [
+                {
+                    'measurement': collection,
+                    'time': timestamp,
+                    'fields': {
+                        'CO2Factor': self.data['Body'][keyname]['CO2Factor'],
+                        'CashFactor': self.data['Body'][keyname]['CashFactor'],
+                        'CashFactor': self.data['Body'][keyname]['CashFactor'],
+                        'HWVersion': self.data['Body'][keyname]['HWVersion'],
+                        'SWVersion': self.data['Body'][keyname]['SWVersion']
                     }
                 }
             ]
