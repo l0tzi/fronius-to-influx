@@ -122,7 +122,7 @@ class FroniusToInflux:
                         'PowerReal_P_Phase_1': self.data["Body"]["Data"]["PowerReal_P_Phase_1"],
                         'PowerReal_P_Phase_2': self.data["Body"]["Data"]["PowerReal_P_Phase_2"],
                         'PowerReal_P_Phase_3': self.data["Body"]["Data"]["PowerReal_P_Phase_3"],
-                        'CurrentConsumption': (int(self.data["Body"]["Data"]["PowerReal_P_Sum"] ) * -1)
+                        'CurrentConsumption': float(self.data["Body"]["Data"]["PowerReal_P_Sum"]) 
                     }
                 }
             ]
