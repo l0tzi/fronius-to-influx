@@ -27,22 +27,22 @@ class FroniusToInflux:
     BACKOFF_INTERVAL = 3
     IGNORE_SUN_DOWN = False
 
-    def __init__(self, client: InfluxDBClient, location: Location, endpoints: List[str], tz: Any) -> None:
+    def __init__(self, client, location, endpoints, tz):
         self.client = client
         self.location = location
         self.endpoints = endpoints
         self.tz = tz
-        self.data: Dict[Any, Any] = {}
+        self.data = None
 
-    def get_float_or_zero(self, value: str) -> float:
-        internal_data: Dict[Any, Any] = {}
+    def get_float_or_zero(self, value):
+        internal_data = None
         try:
             internal_data = self.data['Body']['Data']
         except KeyError:
             raise WrongFroniusData('Response structure is not healthy.')
         return float(internal_data.get(value, {}).get('Value', 0))
 
-    def translate_response(self) -> List[Dict]:
+    def translate_response(self):
         collection = self.data['Head']['RequestArguments']['DataCollection']
         timestamp = self.data['Head']['Timestamp']
         if collection == 'CommonInverterData':
@@ -112,13 +112,13 @@ class FroniusToInflux:
             raise DataCollectionError("Unknown data collection type.")
 
 
-    def sun_is_shining(self) -> None:
+    def sun_is_shining(self):
         sun = self.location.sun()
         if not self.IGNORE_SUN_DOWN and not sun['sunrise'] < datetime.datetime.now(tz=self.tz) < sun['sunset']:
             raise SunIsDown
         return None
 
-    def run(self) -> None:
+    def run(self):
         try:
             while True:
                 try:
@@ -133,10 +133,10 @@ class FroniusToInflux:
                     print('Data written')
                     sleep(self.BACKOFF_INTERVAL)
                 except SunIsDown:
-                    print("Waiting for sunrise")
                     sleep(60)
                     print('Waited 60 seconds for sunrise')
-                except ConnectionError:
+                except ConnectionError as e:
+                    print("Exception: {}".format(e))
                     print("Waiting for connection...")
                     sleep(10)
                     print('Waited 10 seconds for connection')

@@ -34,7 +34,7 @@
     },
     {
       "cacheTimeout": null,
-      "datasource": "InfluxDB",
+      "datasource": "fronius",
       "gridPos": {
         "h": 6,
         "w": 4,
@@ -146,7 +146,7 @@
         "rgba(237, 129, 40, 0.89)",
         "#d44a3a"
       ],
-      "datasource": "InfluxDB",
+      "datasource": "fronius",
       "decimals": 3,
       "format": "watth",
       "gauge": {
@@ -266,7 +266,7 @@
         "#FF9830",
         "#d44a3a"
       ],
-      "datasource": "InfluxDB",
+      "datasource": "fronius",
       "format": "watth",
       "gauge": {
         "maxValue": 100,
@@ -511,7 +511,7 @@
         "rgba(237, 129, 40, 0.89)",
         "#d44a3a"
       ],
-      "datasource": "InfluxDB",
+      "datasource": "fronius",
       "decimals": 2,
       "format": "currencyPLN",
       "gauge": {
@@ -633,7 +633,7 @@
         "rgba(237, 129, 40, 0.89)",
         "#d44a3a"
       ],
-      "datasource": "InfluxDB",
+      "datasource": "fronius",
       "decimals": 2,
       "format": "currencyPLN",
       "gauge": {
@@ -756,7 +756,7 @@
         "rgba(237, 129, 40, 0.89)",
         "#d44a3a"
       ],
-      "datasource": "InfluxDB",
+      "datasource": "fronius",
       "decimals": 2,
       "format": "currencyPLN",
       "gauge": {
@@ -879,7 +879,7 @@
         "rgba(237, 129, 40, 0.89)",
         "#d44a3a"
       ],
-      "datasource": "InfluxDB",
+      "datasource": "fronius",
       "decimals": 2,
       "format": "currencyPLN",
       "gauge": {
@@ -1014,7 +1014,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "InfluxDB",
+      "datasource": "fronius",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -1132,7 +1132,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "InfluxDB",
+      "datasource": "fronius",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
