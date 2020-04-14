@@ -139,10 +139,19 @@ class Fronius2Influx(object):
             keyname = 'LoggerInfo'
             return {
                         'CO2Factor': self.data['Body'][keyname]['CO2Factor'],
+                        'CO2Unit': self.data['Body'][keyname]['CO2Unit'],
+                        'CashCurrency': self.data['Body'][keyname]['CashCurrency'],
                         'CashFactor': self.data['Body'][keyname]['CashFactor'],
-                        'CashFactor': self.data['Body'][keyname]['CashFactor'],
+                        'DefaultLanguage': self.data['Body'][keyname]['DefaultLanguage'],
+                        'DeliveryFactor': self.data['Body'][keyname]['DeliveryFactor'],
                         'HWVersion': self.data['Body'][keyname]['HWVersion'],
-                        'SWVersion': self.data['Body'][keyname]['SWVersion']
+                        'PlatformID': self.data['Body'][keyname]['PlatformID'],
+                        'ProductID': self.data['Body'][keyname]['ProductID'],
+                        'SWVersion': self.data['Body'][keyname]['SWVersion'],
+                        'TimezoneLocation': self.data['Body'][keyname]['TimezoneLocation'],
+                        'TimezoneName': self.data['Body'][keyname]['TimezoneName'],
+                        'UTCOffset': self.data['Body'][keyname]['UTCOffset'],
+                        'UniqueID': self.data['Body'][keyname]['UniqueID'],
                     }
         else:
             raise DataCollectionError("Unknown data collection type.")
