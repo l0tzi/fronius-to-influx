@@ -3,7 +3,6 @@
 import datetime
 import json
 import time
-
 import pytz
 from astral import Observer, sun
 from requests import get
@@ -13,7 +12,7 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 class WrongFroniusData(Exception):
     pass
 
-class SunIsDown(Exception):
+class SunIsDownException(Exception):
     pass
 
 class DataCollectionError(Exception):
@@ -125,7 +124,7 @@ class Fronius2Influx(object):
                         'PowerReal_P_Phase_1': self.data["Body"]["Data"]["PowerReal_P_Phase_1"],
                         'PowerReal_P_Phase_2': self.data["Body"]["Data"]["PowerReal_P_Phase_2"],
                         'PowerReal_P_Phase_3': self.data["Body"]["Data"]["PowerReal_P_Phase_3"],
-                        'PowerReal_P_Phase_Sum': float(self.data["Body"]["Data"]["PowerReal_P_Phase_Sum"]),
+                        'PowerReal_P_Sum': float(self.data["Body"]["Data"]["PowerReal_P_Sum"]),
                         'MeterTimeStamp': self.data["Body"]["Data"]["TimeStamp"],
                         'MeterVisible': self.data["Body"]["Data"]["Visible"],
                         'Voltage_AC_PhaseToPhase_12': self.data["Body"]["Data"]["Voltage_AC_PhaseToPhase_12"],
@@ -160,7 +159,7 @@ class Fronius2Influx(object):
         sunrise = sun.sunrise(self.location, datetime.datetime.now(), self.tz)
         sunset = sun.sunset(self.location, datetime.datetime.now(), self.tz)
         if not self.IGNORE_SUN_DOWN and not sunrise < datetime.datetime.now(tz = self.tz) < sunset:
-            raise SunIsDown
+            raise SunIsDownException()
         return None
 
     def run(self):
@@ -170,24 +169,34 @@ class Fronius2Influx(object):
                     self.sun_is_shining()
                     collected_data = {}
                     for url in self.endpoints:
-                        #print(url)
                         self.data = get(url).json()
                         timestamp = self.data['Head']['Timestamp']
                         collected_data.update(self.translate_response())
-                    #create output -> Timestamp + Fields
+                    current_production = collected_data['PAC']
+                    current_consumption = collected_data['PowerReal_P_Sum']
+                    current_fedin = max(current_production - current_consumption, 0)
+                    current_draw = max(current_consumption - current_production, 0)
+                    calcs = {
+                        'CurrentConsumption' : current_consumption,
+                        'CurrentProduction': current_production,
+                        'CurrentFedin': current_fedin,
+                        'CurrentDraw': current_draw,
+                    }
+                    collected_data.update(calcs)
                     export_struct = {
                         'measurement': 'fronius',
                         'time': timestamp,
                         'fields': collected_data,
-                        'tags': {'location' : 'fronius'}
+                        'tags': {'location': 'fronius'}
                     }
-                    #write2Influx2
-                    self.write_api.write(bucket= self.bucket, record= Point.from_dict(export_struct))
+                    self.write_api.write(
+                        bucket=self.bucket, record=Point.from_dict(export_struct)
+                        )
                     print("Write successful - sleeping 30 sec")
                     time.sleep(30)
-                except SunIsDown:
+                except SunIsDownException:
+                    print('Waiting 60 seconds for sunrise')
                     time.sleep(60)
-                    print('Waited 60 seconds for sunrise')
                 except ConnectionError as e:
                     print("Exception: {}".format(e))
                     print("Waiting for connection...")
