@@ -172,10 +172,10 @@ class Fronius2Influx(object):
                         self.data = get(url).json()
                         timestamp = self.data['Head']['Timestamp']
                         collected_data.update(self.translate_response())
-                    current_production = max(collected_data['PAC'], 0)
-                    current_fedin = max((collected_data['PowerReal_P_Sum'] * -1),0)
-                    current_draw = max(collected_data['PowerReal_P_Sum'], 0)
-                    current_consumption = max(current_production - current_fedin + current_draw)
+                    current_production = float(max(collected_data['PAC'], 0))
+                    current_fedin = float(max((collected_data['PowerReal_P_Sum'] * -1),0))
+                    current_draw = float(max(collected_data['PowerReal_P_Sum'], 0))
+                    current_consumption = float(current_production - current_fedin + current_draw)
                     
                     calcs = {
                         'CurrentConsumption' : current_consumption,
