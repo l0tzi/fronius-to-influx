@@ -110,7 +110,7 @@ class Fronius2Influx(object):
                         'EnergyReal_WAC_Sum_Consumed': float_or_zero(self.data["Body"]["Data"]["EnergyReal_WAC_Sum_Consumed"]),
                         'EnergyReal_WAC_Sum_Produced': float_or_zero(self.data["Body"]["Data"]["EnergyReal_WAC_Sum_Produced"]),
                         'Frequency_Phase_Average': float_or_zero(self.data["Body"]["Data"]["Frequency_Phase_Average"]),
-                        'Meter_Location_Current': self.data["Body"]["Data"]["Meter_Location_Current"]),
+                        'Meter_Location_Current': self.data["Body"]["Data"]["Meter_Location_Current"],
                         'PowerApparent_S_Phase_1': float_or_zero(self.data["Body"]["Data"]["PowerApparent_S_Phase_1"]),
                         'PowerApparent_S_Phase_2': float_or_zero(self.data["Body"]["Data"]["PowerApparent_S_Phase_2"]),
                         'PowerApparent_S_Phase_3': float_or_zero(self.data["Body"]["Data"]["PowerApparent_S_Phase_3"]),
