@@ -44,7 +44,7 @@ class Fronius2Influx(object):
         return float(internal_data.get(value, {}).get('Value', 0))
     
     def float_or_zero(self, value):
-        return float(value, 0)
+        return float(value)
     def get_timestamp(self):
         return self.data['Head']['Timestamp']
     def translate_response(self):
