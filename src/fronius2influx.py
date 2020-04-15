@@ -42,7 +42,9 @@ class Fronius2Influx(object):
         except KeyError:
             raise WrongFroniusData('Response structure is not healthy.')
         return float(internal_data.get(value, {}).get('Value', 0))
-
+    
+    def float_or_zero(self, value):
+        return float(value, 0)
     def get_timestamp(self):
         return self.data['Head']['Timestamp']
     def translate_response(self):
@@ -94,55 +96,55 @@ class Fronius2Influx(object):
                     }
         elif collection == 'Meter':
             return {
-                        'Current_AC_Phase_1': self.data["Body"]["Data"]["Current_AC_Phase_1"],
-                        'Current_AC_Phase_2': self.data["Body"]["Data"]["Current_AC_Phase_2"],
-                        'Current_AC_Phase_3': self.data["Body"]["Data"]["Current_AC_Phase_3"],
+                        'Current_AC_Phase_1': float_or_zero(self.data["Body"]["Data"]["Current_AC_Phase_1"]),
+                        'Current_AC_Phase_2': float_or_zero(self.data["Body"]["Data"]["Current_AC_Phase_2"]),
+                        'Current_AC_Phase_3': float_or_zero(self.data["Body"]["Data"]["Current_AC_Phase_3"]),
                         'MeterManufacturer': self.data["Body"]["Data"]["Details"]['Manufacturer'],
                         'MeterModel': self.data["Body"]["Data"]["Details"]['Model'],
                         'MeterSerial': self.data["Body"]["Data"]["Details"]['Serial'],
                         'MeterEnable': self.data["Body"]["Data"]["Enable"],
-                        'EnergyReactive_VArAC_Sum_Consumed': self.data["Body"]["Data"]["EnergyReactive_VArAC_Sum_Consumed"],
-                        'EnergyReactive_VArAC_Sum_Produced': self.data["Body"]["Data"]["EnergyReactive_VArAC_Sum_Produced"],
-                        'EnergyReal_WAC_Minus_Absolute': self.data["Body"]["Data"]["EnergyReal_WAC_Minus_Absolute"],
-                        'EnergyReal_WAC_Plus_Absolute': self.data["Body"]["Data"]["EnergyReal_WAC_Plus_Absolute"],
-                        'EnergyReal_WAC_Sum_Consumed': self.data["Body"]["Data"]["EnergyReal_WAC_Sum_Consumed"],
-                        'EnergyReal_WAC_Sum_Produced': self.data["Body"]["Data"]["EnergyReal_WAC_Sum_Produced"],
-                        'Frequency_Phase_Average': self.data["Body"]["Data"]["Frequency_Phase_Average"],
-                        'Meter_Location_Current': self.data["Body"]["Data"]["Meter_Location_Current"],
-                        'PowerApparent_S_Phase_1': self.data["Body"]["Data"]["PowerApparent_S_Phase_1"],
-                        'PowerApparent_S_Phase_2': self.data["Body"]["Data"]["PowerApparent_S_Phase_2"],
-                        'PowerApparent_S_Phase_3': self.data["Body"]["Data"]["PowerApparent_S_Phase_3"],
-                        'PowerApparent_S_Sum': self.data["Body"]["Data"]["PowerApparent_S_Sum"],
-                        'PowerFactor_Phase_1': self.data["Body"]["Data"]["PowerFactor_Phase_1"],
-                        'PowerFactor_Phase_2': self.data["Body"]["Data"]["PowerFactor_Phase_2"],
-                        'PowerFactor_Phase_3': self.data["Body"]["Data"]["PowerFactor_Phase_3"],
-                        'PowerFactor_Sum': self.data["Body"]["Data"]["PowerFactor_Sum"],
-                        'PowerReactive_Q_Phase_1': self.data["Body"]["Data"]["PowerReactive_Q_Phase_1"],
-                        'PowerReactive_Q_Phase_2': self.data["Body"]["Data"]["PowerReactive_Q_Phase_2"],
-                        'PowerReactive_Q_Phase_3': self.data["Body"]["Data"]["PowerReactive_Q_Phase_3"],
-                        'PowerReactive_Q_Sum': self.data["Body"]["Data"]["PowerReactive_Q_Sum"],
-                        'PowerReal_P_Phase_1': self.data["Body"]["Data"]["PowerReal_P_Phase_1"],
-                        'PowerReal_P_Phase_2': self.data["Body"]["Data"]["PowerReal_P_Phase_2"],
-                        'PowerReal_P_Phase_3': self.data["Body"]["Data"]["PowerReal_P_Phase_3"],
-                        'PowerReal_P_Sum': float(self.data["Body"]["Data"]["PowerReal_P_Sum"]),
+                        'EnergyReactive_VArAC_Sum_Consumed': float_or_zero(self.data["Body"]["Data"]["EnergyReactive_VArAC_Sum_Consumed"]),
+                        'EnergyReactive_VArAC_Sum_Produced': float_or_zero(self.data["Body"]["Data"]["EnergyReactive_VArAC_Sum_Produced"]),
+                        'EnergyReal_WAC_Minus_Absolute': float_or_zero(self.data["Body"]["Data"]["EnergyReal_WAC_Minus_Absolute"]),
+                        'EnergyReal_WAC_Plus_Absolute': float_or_zero(self.data["Body"]["Data"]["EnergyReal_WAC_Plus_Absolute"]),
+                        'EnergyReal_WAC_Sum_Consumed': float_or_zero(self.data["Body"]["Data"]["EnergyReal_WAC_Sum_Consumed"]),
+                        'EnergyReal_WAC_Sum_Produced': float_or_zero(self.data["Body"]["Data"]["EnergyReal_WAC_Sum_Produced"]),
+                        'Frequency_Phase_Average': float_or_zero(self.data["Body"]["Data"]["Frequency_Phase_Average"]),
+                        'Meter_Location_Current': self.data["Body"]["Data"]["Meter_Location_Current"]),
+                        'PowerApparent_S_Phase_1': float_or_zero(self.data["Body"]["Data"]["PowerApparent_S_Phase_1"]),
+                        'PowerApparent_S_Phase_2': float_or_zero(self.data["Body"]["Data"]["PowerApparent_S_Phase_2"]),
+                        'PowerApparent_S_Phase_3': float_or_zero(self.data["Body"]["Data"]["PowerApparent_S_Phase_3"]),
+                        'PowerApparent_S_Sum': float_or_zero(self.data["Body"]["Data"]["PowerApparent_S_Sum"]),
+                        'PowerFactor_Phase_1': float_or_zero(self.data["Body"]["Data"]["PowerFactor_Phase_1"]),
+                        'PowerFactor_Phase_2': float_or_zero(self.data["Body"]["Data"]["PowerFactor_Phase_2"]),
+                        'PowerFactor_Phase_3': float_or_zero(self.data["Body"]["Data"]["PowerFactor_Phase_3"]),
+                        'PowerFactor_Sum': float_or_zero(self.data["Body"]["Data"]["PowerFactor_Sum"]),
+                        'PowerReactive_Q_Phase_1': float_or_zero(self.data["Body"]["Data"]["PowerReactive_Q_Phase_1"]),
+                        'PowerReactive_Q_Phase_2': float_or_zero(self.data["Body"]["Data"]["PowerReactive_Q_Phase_2"]),
+                        'PowerReactive_Q_Phase_3': float_or_zero(self.data["Body"]["Data"]["PowerReactive_Q_Phase_3"]),
+                        'PowerReactive_Q_Sum': float_or_zero(self.data["Body"]["Data"]["PowerReactive_Q_Sum"]),
+                        'PowerReal_P_Phase_1': float_or_zero(self.data["Body"]["Data"]["PowerReal_P_Phase_1"]),
+                        'PowerReal_P_Phase_2': float_or_zero(self.data["Body"]["Data"]["PowerReal_P_Phase_2"]),
+                        'PowerReal_P_Phase_3':float_or_zero( self.data["Body"]["Data"]["PowerReal_P_Phase_3"]),
+                        'PowerReal_P_Sum': float_or_zero((self.data["Body"]["Data"]["PowerReal_P_Sum"])),
                         'MeterTimeStamp': self.data["Body"]["Data"]["TimeStamp"],
                         'MeterVisible': self.data["Body"]["Data"]["Visible"],
-                        'Voltage_AC_PhaseToPhase_12': self.data["Body"]["Data"]["Voltage_AC_PhaseToPhase_12"],
-                        'Voltage_AC_PhaseToPhase_23': self.data["Body"]["Data"]["Voltage_AC_PhaseToPhase_23"],
-                        'Voltage_AC_PhaseToPhase_31': self.data["Body"]["Data"]["Voltage_AC_PhaseToPhase_31"],
-                        'Voltage_AC_Phase_1': self.data["Body"]["Data"]["Voltage_AC_Phase_1"],
-                        'Voltage_AC_Phase_2': self.data["Body"]["Data"]["Voltage_AC_Phase_2"],
-                        'Voltage_AC_Phase_3': self.data["Body"]["Data"]["Voltage_AC_Phase_3"],
+                        'Voltage_AC_PhaseToPhase_12': float_or_zero(self.data["Body"]["Data"]["Voltage_AC_PhaseToPhase_12"]),
+                        'Voltage_AC_PhaseToPhase_23': float_or_zero(self.data["Body"]["Data"]["Voltage_AC_PhaseToPhase_23"]),
+                        'Voltage_AC_PhaseToPhase_31': float_or_zero(self.data["Body"]["Data"]["Voltage_AC_PhaseToPhase_31"]),
+                        'Voltage_AC_Phase_1': float_or_zero(self.data["Body"]["Data"]["Voltage_AC_Phase_1"]),
+                        'Voltage_AC_Phase_2': float_or_zero(self.data["Body"]["Data"]["Voltage_AC_Phase_2"]),
+                        'Voltage_AC_Phase_3': float_or_zero(self.data["Body"]["Data"]["Voltage_AC_Phase_3"]),
                     }
         elif collection == 'LoggerInfo':
             keyname = 'LoggerInfo'
             return {
-                        'CO2Factor': self.data['Body'][keyname]['CO2Factor'],
+                        'CO2Factor': float_or_zero(self.data['Body'][keyname]['CO2Factor']),
                         'CO2Unit': self.data['Body'][keyname]['CO2Unit'],
                         'CashCurrency': self.data['Body'][keyname]['CashCurrency'],
-                        'CashFactor': self.data['Body'][keyname]['CashFactor'],
+                        'CashFactor': float_or_zero(self.data['Body'][keyname]['CashFactor']),
                         'DefaultLanguage': self.data['Body'][keyname]['DefaultLanguage'],
-                        'DeliveryFactor': self.data['Body'][keyname]['DeliveryFactor'],
+                        'DeliveryFactor': float_or_zero(self.data['Body'][keyname]['DeliveryFactor']),
                         'HWVersion': self.data['Body'][keyname]['HWVersion'],
                         'PlatformID': self.data['Body'][keyname]['PlatformID'],
                         'ProductID': self.data['Body'][keyname]['ProductID'],
@@ -172,10 +174,10 @@ class Fronius2Influx(object):
                         self.data = get(url).json()
                         timestamp = self.data['Head']['Timestamp']
                         collected_data.update(self.translate_response())
-                    current_production = max(collected_data['PAC'], 0)
-                    current_fedin = max((collected_data['PowerReal_P_Sum'] * -1),0)
-                    current_draw = float(max(collected_data['PowerReal_P_Sum'], 0))
-                    current_consumption = float(current_production - current_fedin + current_draw)
+                    current_production = float_or_zero(max(collected_data['PAC'], 0))
+                    current_fedin = float_or_zero(max((collected_data['PowerReal_P_Sum'] * -1),0))
+                    current_draw = float_or_zero(max(collected_data['PowerReal_P_Sum'], 0))
+                    current_consumption = float_or_zero((current_production - current_fedin + current_draw))
                     
                     calcs = {
                         'CurrentConsumption' : current_consumption,
